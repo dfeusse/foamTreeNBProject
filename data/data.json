@@ -1,0 +1,18 @@
+[
+    {
+        "label": "Ajax",
+        "weight": 1
+    },
+    {
+        "label": "Using",
+        "weight": 3
+    },
+    {
+        "label": "FoamTree",
+        "weight": 2
+    },
+    {
+        "label": "Visualization",
+        "weight": 4
+    }
+]

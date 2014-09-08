@@ -1,0 +1,488 @@
+##
+## Wishes for Wall of Wishes
+##
+## Examples: 
+##     basic: https://admin.netbase.com/ariel/ariel/cb/TestDir/michael-wishesv3.json?pullsize=50000&domain=twitter.com
+##     debug: https://admin.netbase.com/ariel/ariel/cb/TestDir/michael-wishesv3.json?pullsize=100&domain=twitter.com&debug=true
+##     dates: https://admin.netbase.com/ariel/ariel/cb/TestDir/michael-wishesv3.json?pullsize=1000&domain=twitter.com&startDateTime=2014-08-19%2014:19:12.553&endDateTime=2014-08-20%2014:19:12.553
+##     topic: https://admin.netbase.com/ariel/ariel/cb/TestDir/michael-wishesv3.json?pullsize=50000&indexSelector=TOPIC-347795:null
+##     keyword: https://admin.netbase.com/ariel/ariel/cb/TestDir/michael-wishesv3.json?pullsize=10000&keywords=iphone
+##
+## Params:
+##     debug (optional) - true to debug (default false)
+##     domain (optional) - defaults to flyertalk.com (check with engineering for the format)
+##     pullsize (optional) - number of results to pull (defaults to 10)
+##     startDateTime/endDateTime (optional) - start and end time to query (both must be specified) (format: 2012-08-08 18:19:12.553)
+##     keywords (optional) - comma-seperated list of OR'd keyword filters (format: luxury,luxurious)
+##     indexSelector (optional) - the topic index to query (defaults to GENERAL:null) (format: TOPIC-347795:null)
+##       Note: To use indexSelector there must be a topic with more than 1 month history (otherwise it's just in the general index)
+##
+## Note: 
+##     copy script: ./scripts/cpariel.sh ~/Developer/WallOfWishes/Ariel/michael-wishesv3.json
+##     FoamTree: http://get.carrotsearch.com/foamtree/demo/demos/settings.html
+##
+
+#set ($debugTimestamp = "2014-08-22 4:44 PM")
+
+## Domain param
+#set ($domainTerm = "")
+#if ($params.domain && $params.domain.length() > 0)
+	## Original map from Lei Li was !\"#$%&'()+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`
+	## But in Velocity there's no need for escaping characters with a back slash as long as they are
+	## put in a single quoted string
+	#set ($domainMapTarget = '!"#$%&' + "'" + '()+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`')
+	#set ($domainTemp = $params.domain)
+	
+	##
+	## Reverse the domain name
+	##
+	#set ($domain = "")
+
+	#set ($numParts = $domainTemp.split("\.").size())
+	#foreach ($domainPart in $domainTemp.split("\."))
+		#set ($domain = $domainPart + $domain)
+		#if($velocityCount != $numParts)
+			#set ($domain = "." + $domain)
+		#end
+	#end
+		
+	#set ($domainMapSource = [
+	    "com.twitter",
+	    "com.facebook",
+	    "com.baidu.tieba",
+	    "me.formspring",
+	    "com.reddit",
+	    "com.douban",
+	    "com.startimes",
+	    "net.2ch.kohada",
+	    "cn.tianya.bbs",
+	    "net.2ch.toro",
+	    "id.co.kaskus",
+	    "com.hkgolden.forum",
+	    "com.topix",
+	    "com.fatakat.forums",
+	    "com.gaiaonline",
+	    "jp.co.yahoo.chiebukuro.detail",
+	    "com.neogaf",
+	    "com.gearslutz",
+	    "hk.com.discuss",
+	    "net.2ch.anago",
+	    "jp.ameblo",
+	    "com.amazon",
+	    "com.eyny",
+	    "fr.doctissimo.forum",
+	    "nl.islive",
+	    "com.yahoo.answers",
+	    "com.tripadvisor",
+	    "ru.drom.forums",
+	    "cn.com.xcar",
+	    "com.advfn.investorshub",
+	    "com.cafemom",
+	    "com.cnn",
+	    "net.gutefrage",
+	    "com.alfemminile.forum",
+	    "ru.nn",
+	    "com.ign",
+	    "net.2ch.awabi",
+	    "ua.od.forum",
+	    "com.baby-kingdom",
+	    "com.gamefaqs",
+	    "net.2ch.engawa",
+	    "my.com.cari.cforum",
+	    "net.2ch.uni",
+	    "uk.co.digitalspy.forums",
+	    "com.pantip",
+	    "fi.suomi24.keskustelu",
+	    "ru.mail.otvet",
+	    "com.imdb",
+	    "com.xda-developers.forum",
+	    "net.2ch.ikura",
+	    "com.55bbs.bbs",
+	    "com.ar15",
+	    "com.invisionfree.z15",
+	    "com.weightwatchers",
+	    "fr.hardware.forum",
+	    "ru.e1",
+	    "ru.eva",
+	    "com.naver.cafe",
+	    "com.naver.kin",
+	    "com.thebump.community",
+	    "de.dslr-forum",
+	    "com.china.club",
+	    "com.delphiforums.forums"
+	])
+	
+	##
+	## Map to short version of domain if necessary
+	##
+	#set ($domainGotMapped = false)
+	#foreach ($domainInMap in $domainMapSource)
+		#if ($domain == $domainInMap)
+			#set ($domainGotMapped = true)
+			#set ($targetId = $velocityCount - 1)
+			#set ($domain = "|$domainMapTarget.charAt($targetId)")
+		#end
+	#end
+	
+	#if ($domainGotMapped)
+		## Patch escaping a slash for Prospero
+		#set ($domain = $domain.replace('\', '\\'))
+	#else
+		#set ($domain = $domainTemp.replace(".", " "))
+	#end
+	
+	#set ($domain = $domain + "|")
+	
+#end
+#if ($domain && $domain.length() > 0)
+	#set ($domainTerm = ",To(RoleObj,DocumentObj.domain='$domain')")
+#end
+
+## Result Set Size param
+#if ($params.pullsize && $params.pullsize.length() > 0)
+	#set ($pullsize = $params.pullsize)
+#else
+	#set ($pullsize = 10)
+#end
+
+## Date param
+#set ($dateTerm = "")
+#if (($params.startDateTime && $params.startDateTime.length() > 0) && ($params.endDateTime && $params.endDateTime.length() > 0)) 
+	#set ($startDateTime = $params.startDateTime)
+	#set ($endDateTime = $params.endDateTime)
+	#set ($dateTerm = ",To(RoleObj,DateRange(DocumentObj.datetime, '$startDateTime', '$endDateTime'))")
+#end
+
+## Keyword param
+#set ($keywordTerm = "")
+#if ($params.keywords && $params.keywords.length() > 0)
+	#set ($keywordTerm = ",To(RoleObj,")
+
+	#set ($keywords = $params.keywords.split(","))
+
+	#foreach ($keyword in $keywords)
+	    #if($velocityCount > 1) 
+            #set ($keywordTerm = "$keywordTerm,")
+        #end
+		#set ($keywordTerm = $keywordTerm + "SentenceObj.stemmedText = '$keyword.trim()'")
+	#end
+
+	#set ($keywordTerm = $keywordTerm + ")")
+
+#end
+
+## IndexSelector param
+#set ($indexSelector = "GENERAL:null")
+#if ($params.indexSelector && $params.indexSelector.length() > 0)
+	#set ($indexSelector = $params.indexSelector)
+#end
+
+## Author param (not working yet)
+#set ($authorsTerm = "")
+#if ($params.authors && $params.authors.length() > 0)
+    #set ($authorsTerm = ",Or(")
+    #set ($authorsString = $params.getString("authors"))
+    #set ($authors = $authorsString.split(","))
+    #foreach ($author in $authors)
+        #if($velocityCount > 1) 
+            #set ($authorsTerm = "$authorsTerm,")
+        #end
+        #set ($authorsTerm = "$authorsTerm DocumentObj.author='$author'")
+    #end
+    #set ($authorsTerm = "$authorsTerm)")
+#end 
+
+## The Prospero pattern
+#set ($patString = "
+		And(
+		  To(RoleObj,
+		    To(FrameObj,
+		      And(
+		        RoleObj.name='Trigger', 
+		        RoleObj.stemmedResults='wish' 
+		        $domainTerm
+		        $dateTerm
+		        $keywordTerm
+		      )
+		    )
+		  ), 
+		  Or(
+		    RoleObj.name='Object',
+		    RoleObj.insight='Wish'
+		  ), 
+          Not(RoleObj.stemmedResults='it'), 
+          Not(RoleObj.stemmedResults='they')
+		)
+	" )
+
+#set ($pattern = $prospero.parsePattern($patString))
+
+#set ($fieldsList = "DocumentObj.docID.s SentenceObj.sentenceNumber.s FrameObj.type.s RoleObj.name.s RoleObj.insight.s RoleObj.result.s SentenceObj.text.s")
+#set ($pageOffset = "0")
+#set ($pageSize = "$pullsize")
+#set ($priority = 2)
+#set ($indexSelector = $indexSelector)
+#set ($sort = "RoleObj.insight.s")
+
+#set ($op = $prospero.parseOperation("RetrieveFields fields: $fieldsList; pageOffset: $pageOffset; pageSize: $pageSize; priority: $priority; indexSelector: $indexSelector; sort: $sort;") )	
+
+#set ($op.request.pattern = $pattern)
+
+#if ($params.debug && $params.debug.length() > 0)
+    <table>
+    
+    <tr>
+    <td>
+    VERSION:
+    </td>
+    <td>
+    $debugTimestamp
+    </td>
+    </tr>
+
+    <tr>
+    <td>
+	PARAMS
+    </td>
+    <td>
+	$params
+    </td>
+    </tr>
+
+    <tr>
+    <td>
+	PATTERN
+    </td>
+    <td>
+	$patString
+    </td>
+    </tr>
+    
+    <tr>
+    <td>
+	OP
+    </td>
+    <td>
+	$op
+    </td>
+    </tr>
+        
+    </table>    
+#else
+	#set ( $x = $PROSPERO_API.run($op) )
+#end
+
+## 
+## Normalize the wish data by unique sentences
+##
+#set ($objectKey = "Object")
+#set ($wishKey = "Wish")
+#set ($sentenceKey = "Sentence")
+
+#set ($wishData = {})
+#foreach ($row in $op.result.fields)
+	
+	#set ($docId = $row.get(1))
+	#set ($sentenceNumber = $row.get(2))
+	#set ($roleObjName = $row.get(4))
+	#set ($roleObjValue = $row.get(6))
+	#set ($sentence = $row.get(7))
+	
+	#set ($docObj = -1)
+	#set ($docObj = $wishData.get($docId))
+	#if (-1 == $docObj)
+		#set ($docObj = {})
+		#set ($sh = $wishData.put($docId, $docObj))
+	#end
+		
+	#set ($sentenceObj = -1)
+	#set ($sentenceObj = $docObj.get($sentenceNumber))
+	#if (-1 == $sentenceObj)
+		#set ($sentenceObj = {})
+		#set ($sh = $docObj.put($sentenceNumber, $sentenceObj))
+	#end
+		
+	#if ("Object" == $roleObjName)
+		#set ($sh = $sentenceObj.put($objectKey, $roleObjValue))
+	#elseif ("Wish" == $roleObjName || "IncompleteSolution" == $roleObjName)
+		#set ($sh = $sentenceObj.put($wishKey, $roleObjValue))
+	#else
+		#set ($sh = $sentenceObj.put($objectKey, "ERROR: Unexpected Role Obj ${roleObjName}"))
+	#end
+		
+	#set ($existingSentence = -1)
+	#set ($existingSentence = $sentenceObj.get($sentenceKey))
+	#if (-1 == $existingSentence || 0 == $existingSentence.length())
+		#set ($sh = $sentenceObj.put($sentenceKey, $sentence))
+	#else
+		#if (!($existingSentence == $sentence))
+		    #set ($errorMsg = "ERROR: Inconsistent Sentences")
+		    #set ($errorMsg = "$errorMsg ($existingSentence) ($sentence)")
+			#set ($sh = $sentenceObj.put($sentenceKey, $errorMsg))
+		#end
+	#end
+
+#end
+
+##
+## Normalize the wish data by Object then Wish then sentence
+##
+## All levels of FoamTree's data structure have the same set of keys (groups, label, and weight).
+## The groups key takes you to the next level down in the hierarchy.  We're using 3 levels which 
+## have the following purposes:
+##
+## Level 1: the Object (e.g. "United Airlines") and the weight (e.g. number of sentences "1")
+## Level 2: the Wish (e.g. "more bacon")
+## Level 3: the sentences (e.g. "I wish United Airlines had more bacon in its breakfast.")
+##
+#set ($sentenceCountForObjectKey = "_sentenceCountForObject")
+#set ($sentenceCountForWishKey = "_sentenceCountForWish")
+#set ($wishRecordsKey = "_wishRecords")
+#set ($shortestSentenceKey = "_shortestSentence")
+#set ($sentencesArrayKey = "_sentencesArray")
+#set ($normalizedData = {})
+#foreach ($docEntry in $wishData.entrySet())
+    #set ($docObj = $docEntry.getValue())
+	#foreach ($sentenceEntry in $docObj.entrySet())
+	    #set ($sentenceObj = $sentenceEntry.getValue())
+    	#set ($object = -1)
+		#set ($object = $sentenceObj.get($objectKey))
+		
+		#set ($wish = -1)
+		#set ($wish = $sentenceObj.get($wishKey))
+		
+		#set ($sentence = -1)
+		#set ($sentence = $sentenceObj.get($sentenceKey))
+		
+		#if (-1 != $object && -1 != $wish && -1 != $sentence) 
+		
+			## Lookup the object at level 1
+			#set ($objectRecord = -1)
+			#set ($objectRecord = $normalizedData.get($object))
+			#if (-1 == $objectRecord)
+				#set ($objectRecord = {})
+				#set ($sh = $objectRecord.put($sentenceCountForObjectKey, 0))
+				#set ($sh = $objectRecord.put($wishRecordsKey, {}))
+				#set ($sh = $normalizedData.put($object, $objectRecord))
+			#end
+			
+			## Update the sentence count at level 1
+			#set ($sentenceCountForObject = $objectRecord.get($sentenceCountForObjectKey))
+			#set ($sentenceCountForObject = $sentenceCountForObject + 1)
+			#set ($sh = $objectRecord.put($sentenceCountForObjectKey, $sentenceCountForObject))
+			
+			## Lookup the wish record at level 2
+			#set ($wishRecords = $objectRecord.get($wishRecordsKey))
+			#set ($wishRecord = -1)
+			#set ($wishRecord = $wishRecords.get($wish))
+			#if (-1 == $wishRecord)
+				#set ($wishRecord = {})
+				#set ($sh = $wishRecord.put($shortestSentenceKey, ""))
+				#set ($sentencesArray = [])
+				#set ($sh = $wishRecord.put($sentencesArrayKey, $sentencesArray))
+				#set ($sh = $wishRecord.put($sentenceCountForWishKey, 0))
+				#set ($sh = $wishRecords.put($wish, $wishRecord))
+			#end
+			
+			## Add the sentence to the sentence array
+			#set ($sentencesArray = $wishRecord.get($sentencesArrayKey))
+			#set ($sh = $sentencesArray.add($sentence))
+			
+			## Update the sentence count at level 2
+			#set ($sentenceCountForWish = $wishRecord.get($sentenceCountForWishKey))
+			#set ($sentenceCountForWish = $sentenceCountForWish + 1)
+			#set ($sh = $wishRecord.put($sentenceCountForWishKey, $sentenceCountForWish))
+			
+			## Update the shortest sentence
+			#set ($existingShortest = $wishRecord.get($shortestSentenceKey))
+			#if (!$existingShortest || "" == $existingShortest || 0 == $existingShortest.length() || 
+			     $sentence.length() < $wishRecord.get($shortestSentenceKey).length())
+				#set ($sh = $wishRecord.put($shortestSentenceKey, $sentence))
+			#end
+		#end
+	#end
+#end
+
+##
+## Map normalized form FoamTree's JSON format
+##
+
+## Sample of output:
+## 
+## {
+##   "groups": [
+##     {
+##       "label": "United",
+##       "weight": 2,
+##       "groups": [
+##         {
+##           "label": "I really wish United had this in other cities.",
+##           "weight": 2,
+##           "groups": [
+##             {
+##               "label": "I wish they have this in other cities in China, Taipei and Tokyo.",
+##               "weight": 1
+##             },
+##             {
+##               "label": "I really wish United had this in other cities.",
+##               "weight": 1
+##             }
+##           ]
+##         }
+##       ]
+##     }
+##   ]
+## }
+
+#set ($groupsKey = "groups")
+#set ($labelKey = "label")
+#set ($weightKey = "weight")
+
+#set ($foamTreeData = {})
+#set ($foamTreeDataGroups = [])
+#set ($sh = $foamTreeData.put($groupsKey, $foamTreeDataGroups))
+
+#foreach ($dataRecord in $normalizedData.entrySet())
+	## Syntax from http://stackoverflow.com/questions/2049981
+	#set ($objectName = $dataRecord.key)  
+	#set ($objectRecord = $dataRecord.value)
+	
+	#set ($level1Group = {})
+
+	#set ($sh = $foamTreeDataGroups.add($level1Group))
+	
+	#set ($sh = $level1Group.put($labelKey, $objectName))
+
+	#set ($sentenceCountForObject = $objectRecord.get($sentenceCountForObjectKey))
+	#set ($sh = $level1Group.put($weightKey, $sentenceCountForObject))
+
+	#set ($level2Groups = [])
+	#set ($sh = $level1Group.put($groupsKey, $level2Groups))
+	
+	#foreach ($wishRecordKeyValuePair in $objectRecord.get($wishRecordsKey).entrySet())
+		#set ($wish = $wishRecordKeyValuePair.key)  ## Not used for anything, sentence used for label instead
+		#set ($wishRecord = $wishRecordKeyValuePair.value)
+	
+		#set ($level2Group = {})
+		#set ($sh = $level2Groups.add($level2Group))
+		
+		#set ($sh = $level2Group.put($labelKey, $wishRecord.get($shortestSentenceKey)))
+		#set ($sh = $level2Group.put($weightKey, $wishRecord.get($sentenceCountForWishKey)))
+		#set ($level3Groups = [])
+		#set ($sh = $level2Group.put($groupsKey, $level3Groups))
+		
+		## Only add level 3 if there are multiple supporting sentences
+		#if (1 != $wishRecord.get($sentenceCountForWishKey))
+			#foreach ($sentence in $wishRecord.get($sentencesArrayKey))
+				#set ($level3Group = {})
+				#set ($sh = $level3Groups.add($level3Group))
+				
+				#set ($sh = $level3Group.put($labelKey, $sentence))
+				#set ($sh = $level3Group.put($weightKey, 1))
+			#end
+		#end
+	#end
+#end
+
+$json.getJson($foamTreeData)
+
