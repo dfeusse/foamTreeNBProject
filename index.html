@@ -16,6 +16,29 @@
         <style type="text/css"></style>
     </head>
     <body ng-app="main">
+
+        <div class="header">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div id="headerImgDiv">
+                            <img id="headerImg" src="static/img/144x144_crop_NBPoweredRGBLargeTransparent.png">
+                        </div>
+                        <div id="headerTitleDiv">
+                            <span id="headerTitle">foam tree demo</span>
+                        </div>
+                    </div>
+                    <!--
+                    <div class="col-lg-6">
+                        <div id="buttonDiv">
+                            <a href="#" id="button" class="btn btn-lg btn-block btn-inverse-outline">Logout</a>
+                        </div>
+                    </div>
+                    -->
+                </div>
+            </div>
+        </div>
+
         <div ng-controller="UploadFileController" class="container">
             <div ng-controller="CallApiController" class="row">
                 <div class="col-lg-8">
@@ -42,7 +65,7 @@
                             <br> 
                             <input type="file" file-model="myFile"/>
                             <br>
-                            <button ng-click="uploadFile()">upload file</button>
+                            <button class="btn btn-default" ng-click="uploadFile()">upload file</button>
                         </div>
                         <h5>file contents:</h5>
                         <div id="my-progress"></div>
