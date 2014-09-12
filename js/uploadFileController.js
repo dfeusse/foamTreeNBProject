@@ -10,7 +10,8 @@ main.factory('CallApiService', function($resource){
 
 main.controller('UploadFileController', function($scope, CallApiService){
 //main.controller('UploadFileController', function($scope){
-
+    $scope.searchTerm = "";
+    
 	$scope.uploadFile = function(){
 		var file = $scope.myFile;
 		//console.log(file)
@@ -95,7 +96,8 @@ main.controller('UploadFileController', function($scope, CallApiService){
     }; 
 */
     //$scope.data = [{"x":1,"y":166},{"x":2,"y":386},{"x":3,"y":235},{"x":4,"y":36},{"x":5,"y":46}];
-    $scope.data = "uploaded data shown here"
+    var uploadedDataMessage = "data displayed when file uploaded";
+    $scope.data = uploadedDataMessage;
 	document.getElementById('dataResult').innerHTML = JSON.stringify($scope.data);
 
     $scope.callApi = function () {

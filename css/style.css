@@ -1,14 +1,15 @@
-#visualization {
-	width: 600px; 
-	height: 600px;
+body {
+	padding-bottom: 10px;
 }
 
 /* HEADER / NAV 
 -------------------------------------------------- */
+/*
 .header {
 	padding-top:10px;
 	padding-bottom:10px;
 	background-color: #3d3d3d;
+	margin-bottom: 20px;
 }
 #headerImgDiv {
 	float:left;
@@ -29,4 +30,41 @@
   	font-size: 48px;
   	font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; 
    	font-weight: 300;
+}
+*/
+.header {
+	padding-top:8px;
+	padding-bottom:8px;
+	background-color: #3d3d3d;
+	margin-bottom: 20px;
+}
+#headerImgDiv {
+	float:left;
+}
+#headerImg {
+	width:30px;
+}
+
+/* VISUAL 
+-------------------------------------------------- */
+#visualization {
+	width: 800px; 
+	height: 800px;
+}
+.formHeaderLabel {
+	font-family: helvetica, sans-serif;
+	font-size: 40px;
+	font-weight: bold;
+	color: #c4c4c4;
+	line-height: 1;
+	margin-bottom: 5px;
+}
+
+/* RIGHT SIDE
+-------------------------------------------------- */
+.btn-default {
+	margin-top:5px;
+}
+#inputBelowHeader {
+	margin-top: 7.5px;
 }

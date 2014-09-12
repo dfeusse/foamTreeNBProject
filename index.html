@@ -24,9 +24,11 @@
                         <div id="headerImgDiv">
                             <img id="headerImg" src="static/img/144x144_crop_NBPoweredRGBLargeTransparent.png">
                         </div>
+                        <!--
                         <div id="headerTitleDiv">
                             <span id="headerTitle">foam tree demo</span>
                         </div>
+                        -->
                     </div>
                     <!--
                     <div class="col-lg-6">
@@ -41,39 +43,45 @@
 
         <div ng-controller="UploadFileController" class="container">
             <div class="row">
-                <div class="col-lg-8">
-                    <div id="visualization"></div>
-                    <!-- <foam-tree data="chart"></foam-tree> -->
-                    <foam-tree data="data"></foam-tree>
-                    <script>
-                       
-                    </script>
+                <div class="col-lg-9">
+                    <div id="visualContainer">
+                        <div id="visualization"></div>
+                        <!-- <foam-tree data="chart"></foam-tree> -->
+                        <foam-tree data="data"></foam-tree>
+                    </div>
                 </div>
-                <div class="col-lg-4">
+                <div class="col-lg-3">
                     <!-- <div ng-controller="CallApiController"> -->
+                    <!--
                     <div>
-                        <h3>Call Data</h3>
-                        <input type="text" ng-model="searchTerm" class="form-control" placeholder="Enter your search terms">
+                        <span class="formHeaderLabel">Call Data</span>
+                        <input id="inputBelowHeader" type="text" ng-model="searchTerm" class="form-control" placeholder="Enter your search term">
                         <span class="input-group-btn">
                             <button class="btn btn-default" ng-click="callApi()"><i class="icon-search"></i>Search</button>
                         </span>
                     </div>
                     <hr>
+                    -->
                     <div>
-                        <h3>Upload Data</h3>
+                        <span class="formHeaderLabel">Upload Data</span>
                         <div>
-                            <br> 
-                            <input type="file" file-model="myFile"/>
-                            <br>
+                            <input id="inputBelowHeader" type="file" file-model="myFile"/>
                             <button class="btn btn-default" ng-click="uploadFile()">upload file</button>
                         </div>
-                        <h5>file contents:</h5>
+                        <br>
+                        <h5>uploaded file contents:</h5>
                         <div id="my-progress"></div>
                         <div id="dataResult"></div>
                     </div>
                 </div>
             </div>
-        </div>
+            <hr>
+            <!-- FOOTER -->
+            <footer>
+                <p class="pull-right"><a href="#">Back to top</a></p>
+                <p>&copy; 2014 NetBase, Inc. <!-- &middot; Poned by Dan</a></p> -->
+            </footer>
+        </div> <!-- end of container -->
 
     <!--
         <div ng-controller="ItemListCtrl">
