@@ -52,27 +52,39 @@
                 </div>
                 <div class="col-lg-3">
                     <!-- <div ng-controller="CallApiController"> -->
-                    <!--
-                    <div>
-                        <span class="formHeaderLabel">Call Data</span>
-                        <input id="inputBelowHeader" type="text" ng-model="searchTerm" class="form-control" placeholder="Enter your search term">
-                        <span class="input-group-btn">
-                            <button class="btn btn-default" ng-click="callApi()"><i class="icon-search"></i>Search</button>
-                        </span>
-                    </div>
-                    <hr>
-                    -->
                     <div>
                         <span class="formHeaderLabel">Upload Data</span>
                         <div>
                             <input id="inputBelowHeader" type="file" file-model="myFile"/>
                             <button class="btn btn-default" ng-click="uploadFile()">upload file</button>
                         </div>
+                        <!--
                         <br>
                         <h5>uploaded file contents:</h5>
                         <div id="my-progress"></div>
                         <div id="dataResult"></div>
+                        -->
                     </div>
+                    <hr>
+                    <div>
+                        <span class="formHeaderLabel">Call Data</span>
+                        <input id="inputBelowHeader" type="text" ng-model="searchTerm" class="form-control" placeholder="Enter Topic ID">
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" ng-click="callApi()"><i class="icon-search"></i>Upload topic</button>
+                        </span>
+                        <br>
+                        <span>
+                            * example topic id: 347955
+                        </span>
+                    </div>
+                    <hr>
+                    <div>
+                        <span class="formHeaderLabel">Uploaded File Contents</span>
+                        <br>
+                        <div id="my-progress"></div>
+                        <div id="dataResult"></div>
+                    </div>
+                    
                 </div>
             </div>
             <hr>

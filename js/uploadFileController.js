@@ -7,8 +7,7 @@ main.factory('CallApiService', function($resource){
     return $resource('https://www.googleapis.com/books/v1/volumes?q=rand&key=AIzaSyB6xs-eZW2RbaNjsZyUi7Q0QLQWj3yoLiU');
 });
 */
-
-main.controller('UploadFileController', function($scope, CallApiService){
+main.controller('UploadFileController', function($scope, $timeout, CallApiService){
 //main.controller('UploadFileController', function($scope){
     $scope.searchTerm = "";
     
@@ -20,7 +19,8 @@ main.controller('UploadFileController', function($scope, CallApiService){
         read.readAsBinaryString(file);
 
         read.onloadend = function() {
-
+            console.log('^^^^^^^^^^^')
+            console.log(read)
             //$scope.data = [{"x":1,"y":16},{"x":2,"y":25},{"x":3,"y":30},{"x":4,"y":10}];
             //$scope.data = read.result;
             var fileContentString = read.result;
@@ -48,38 +48,38 @@ main.controller('UploadFileController', function($scope, CallApiService){
                 console.log(pone)
                 */
                 foamtree.set({
-                        //dataObject: { groups: data.groups },
-                        //dataObject: { groups: $scope.data.data },
-                        //dataObject: { groups: newData },
-                        //dataObject: { groups: $scope.data },
-                        dataObject: { groups: $scope.data.groups },
-                        //console.log('hi')
-                        //console.log(newData)
-                        /*
-                        dataObject: { groups:
-                            [
-                                {
-                                    "label": "Ajax",
-                                    "weight": 1
-                                },
-                                {
-                                    "label": "Using",
-                                    "weight": 3
-                                },
-                                {
-                                    "label": "FoamTree",
-                                    "weight": 2
-                                },
-                                {
-                                    "label": "Visualization",
-                                    "weight": 4
-                                }
-                            ] },
-                        */
-                        rolloutDuration: 3000
-                    });
-                
+                    //dataObject: { groups: data.groups },
+                    //dataObject: { groups: $scope.data.data },
+                    //dataObject: { groups: newData },
+                    //dataObject: { groups: $scope.data },
+                    dataObject: { groups: $scope.data.groups },
+                    //console.log('hi')
+                    //console.log(newData)
+                    /*
+                    dataObject: { groups:
+                        [
+                            {
+                                "label": "Ajax",
+                                "weight": 1
+                            },
+                            {
+                                "label": "Using",
+                                "weight": 3
+                            },
+                            {
+                                "label": "FoamTree",
+                                "weight": 2
+                            },
+                            {
+                                "label": "Visualization",
+                                "weight": 4
+                            }
+                        ] },
+                    */
+                    rolloutDuration: 3000
+                });
             })
+
         }; // end of read.onloadend
 
         read.onprogress = function(data) {
@@ -105,9 +105,40 @@ main.controller('UploadFileController', function($scope, CallApiService){
         //if ($scope.mediaType=="all")  type="";
         //MediaService.get({term:$scope.searchTerm,entity:type},function(response){
         CallApiService.get({action:$scope.searchTerm},function(response){
-            //$scope.pics = response.items;
-            console.log('$$$$$$$$$$$$$$$')
-            console.log(response)
+            /*
+            $scope.$apply(function() {
+                //$scope.charts = {data: [112, 16, 3, 15, 20, 14]};
+                var pone = [{"x":1,"y":16},{"x":2,"y":25},{"x":3,"y":30},{"x":4,"y":10}];
+                //$scope.charts = {data: newData};
+                //scope.data = newData;
+                foamtree.set({
+                    // dataObject: { groups: $scope.charts },
+                    //dataObject: { groups: $scope.yay.groups },
+                    dataObject: { groups: pone.groups },
+                    rolloutDuration: 3000
+                });
+                
+            })
+            */
+            // Used this because of an error
+            // solution: https://docs.angularjs.org/error/$rootScope/inprog?p0=$digest
+            $timeout(function() {
+                console.log('$$$$$$$$$$$$$$$')
+                console.log(response)
+                $scope.yay = response;
+                foamtree.set({
+                    dataObject: { groups: $scope.yay.groups },
+                    //dataObject: { groups: response.groups }, // this should also work
+                    rolloutDuration: 3000
+                });
+            }, 0);
+
+
+
+            //var poneObject = JSON.parse(response.result)
+            //$scope.data = poneObject;
+            console.log('---------')
+            //console.log(poneObject)
         });
     }
 
