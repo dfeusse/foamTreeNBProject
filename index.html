@@ -43,13 +43,6 @@
 
         <div ng-controller="UploadFileController" class="container">
             <div class="row">
-                <div class="col-lg-9">
-                    <div id="visualContainer">
-                        <div id="visualization"></div>
-                        <!-- <foam-tree data="chart"></foam-tree> -->
-                        <foam-tree data="data"></foam-tree>
-                    </div>
-                </div>
                 <div class="col-lg-3">
                     <!-- <div ng-controller="CallApiController"> -->
                     <div>
@@ -81,10 +74,18 @@
                     <div>
                         <span class="formHeaderLabel">Uploaded File Contents</span>
                         <br>
+                        <br>
                         <div id="my-progress"></div>
                         <div id="dataResult"></div>
                     </div>
                     
+                </div>
+                <div class="col-lg-9">
+                    <div id="visualContainer">
+                        <div id="visualization"></div>
+                        <!-- <foam-tree data="chart"></foam-tree> -->
+                        <foam-tree data="data"></foam-tree>
+                    </div>
                 </div>
             </div>
             <hr>

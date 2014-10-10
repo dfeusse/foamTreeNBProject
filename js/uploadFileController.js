@@ -19,8 +19,8 @@ main.controller('UploadFileController', function($scope, $timeout, CallApiServic
         read.readAsBinaryString(file);
 
         read.onloadend = function() {
-            console.log('^^^^^^^^^^^')
-            console.log(read)
+            //console.log('^^^^^^^^^^^')
+            //console.log(read)
             //$scope.data = [{"x":1,"y":16},{"x":2,"y":25},{"x":3,"y":30},{"x":4,"y":10}];
             //$scope.data = read.result;
             var fileContentString = read.result;
@@ -33,6 +33,7 @@ main.controller('UploadFileController', function($scope, $timeout, CallApiServic
             console.log('var var')
             console.log(newData)
 
+            document.getElementById('dataResult').innerHTML = "";
             document.getElementById('dataResult').innerHTML = newData;
             //$scope.charts = {data: newData};
             $scope.$apply(function() {
@@ -124,13 +125,15 @@ main.controller('UploadFileController', function($scope, $timeout, CallApiServic
             // solution: https://docs.angularjs.org/error/$rootScope/inprog?p0=$digest
             $timeout(function() {
                 console.log('$$$$$$$$$$$$$$$')
-                console.log(response)
+                //console.log(response)
                 $scope.yay = response;
                 foamtree.set({
                     dataObject: { groups: $scope.yay.groups },
                     //dataObject: { groups: response.groups }, // this should also work
                     rolloutDuration: 3000
                 });
+                document.getElementById('dataResult').innerHTML = "";
+                document.getElementById('dataResult').innerHTML = JSON.stringify(response.groups);
             }, 0);
 
 

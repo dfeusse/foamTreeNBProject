@@ -12,6 +12,7 @@ main.factory('CallApiService', function($resource){
     //    return $resource('https://www.googleapis.com/books/v1/volumes?q=rand&key=AIzaSyB6xs-eZW2RbaNjsZyUi7Q0QLQWj3yoLiU', {},
     // return $resource('https://admin.netbase.com/ariel/ariel/cb/TestDir/michael-thingsForFoamTreev1.json?report=want&operation=objects&pullSize=100&indexSelector=TOPIC-347955:null\:null', {},
     return $resource('https://admin.netbase.com/ariel/ariel/cb/TestDir/michael-thingsForFoamTreev1.json?report=want&operation=objects&pullSize=100&indexSelector=TOPIC-:action:null\:null', {},
+    //return $resource('http://myjson.com/z95t', {}, //static json of Michaels data
     // return $resource('https://admin.netbase.com/ariel/ariel/cb/TestDir/michael-thingsForFoamTreev1.json?report=want&operation=objects&pullSize=100&indexSelector=TOPIC-:action:null', {},
        {
          get: { method: 'JSONP', params: {callback: 'JSON_CALLBACK'} }
