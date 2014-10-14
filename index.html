@@ -72,6 +72,27 @@
                     </div>
                     <hr>
                     <div>
+                        <span class="formHeaderLabel">Select Topic</span>
+                        <label>select filter term</label>
+                        <select ui-select2 ng-model="selectedSearchTopic" id="source">
+                            <option value="">none</option>
+                            <option value="347955">Working Topic</option>
+                            <option value="1234">John</option>
+                            <option value="5678">Irving</option>
+                            <option value="91267">Steinbeck</option>
+                            <option value="234234">Washington</option>
+                        </select>
+                        <br>
+                        <p>Value</p>
+                        <pre>{{ selectedSearchTopic }}</pre>
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" ng-click="selectTopic()"><i class="icon-search"></i>Upload topic</button>
+                        </span>
+                    </div>
+
+                    <hr>
+
+                    <div>
                         <span class="formHeaderLabel">Uploaded File Contents</span>
                         <br>
                         <br>

@@ -145,4 +145,21 @@ main.controller('UploadFileController', function($scope, $timeout, CallApiServic
         });
     }
 
+    $scope.selectTopic = function () {
+        CallApiService.get({action:$scope.selectedSearchTopic},function(response){
+            console.log('Button Clicked')
+            $timeout(function() {
+                console.log('!!!!!!!')
+                //console.log(response)
+                $scope.poning = response;
+                foamtree.set({
+                    dataObject: { groups: $scope.poning.groups },
+                    //dataObject: { groups: response.groups }, // this should also work
+                    rolloutDuration: 3000
+                });
+                document.getElementById('dataResult').innerHTML = "";
+                document.getElementById('dataResult').innerHTML = JSON.stringify(response.groups);
+            }, 0);
+        })
+    }
 });
