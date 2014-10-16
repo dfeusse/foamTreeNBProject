@@ -33,7 +33,7 @@ function link(scope, element, attrs){
 
     //scope.$watch('data', update)
     scope.$watch(function(){
-        console.log('SCOPE CHANGED')
+        console.log('Scope changed')
         /*
         console.log(scope.data)
         foamtree.set({
