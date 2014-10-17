@@ -45,10 +45,12 @@
             <div class="row">
                 <div class="col-lg-3">
                     <!-- <div ng-controller="CallApiController"> -->
-                    <div>
+                    <div class="headerContainer">
                         <span class="formHeaderLabel">Upload Data</span>
+                    </div>
+                    <div class="headerContainer">
                         <div>
-                            <input id="inputBelowHeader" type="file" file-model="myFile"/>
+                            <input type="file" file-model="myFile"/>
                             <button class="btn btn-default" ng-click="uploadFile()">upload file</button>
                         </div>
                         <!--
@@ -60,7 +62,9 @@
                     </div>
                     <hr>
                     <div>
-                        <span class="formHeaderLabel">Call Data</span>
+                        <div class="headerContainer">
+                            <span class="formHeaderLabel">Call Data</span>
+                        </div>
                         <input id="inputBelowHeader" type="text" ng-model="searchTerm" class="form-control" placeholder="Enter Topic ID">
                         <span class="input-group-btn">
                             <button class="btn btn-default" ng-click="callApi()"><i class="icon-search"></i>Upload topic</button>
@@ -72,10 +76,16 @@
                     </div>
                     <hr>
                     <div>
-                        <span class="formHeaderLabel">Select Topic</span>
+                        <div class="headerContainer">
+                            <span class="formHeaderLabel">Select Topic</span>
+                        </div>
+                        <!--
                         <label>select filter term</label>
                         <br>
+                        
                         <select ui-select2 ng-model="selectedSearchTopic" id="source">
+                        -->
+                        <select ui-select2 ng-model="selectedSearchTopic" class="form-control">
                             <option value="">none</option>
                             <option value="347955">Working Topic</option>
                             <option value="1234">John</option>
@@ -83,9 +93,11 @@
                             <option value="91267">Steinbeck</option>
                             <option value="234234">Washington</option>
                         </select>
+                        <!--
                         <br>
                         <p>Value</p>
                         <pre>{{ selectedSearchTopic }}</pre>
+                        -->
                         <span class="input-group-btn">
                             <button class="btn btn-default" ng-click="selectTopic()"><i class="icon-search"></i>Upload topic</button>
                         </span>

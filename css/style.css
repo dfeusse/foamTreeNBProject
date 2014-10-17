@@ -44,6 +44,9 @@ body {
 #headerImg {
 	width:30px;
 }
+.headerContainer {
+	margin-bottom: 10px;
+}
 
 /* VISUAL 
 -------------------------------------------------- */
@@ -57,14 +60,10 @@ body {
 	font-weight: bold;
 	color: #c4c4c4;
 	line-height: 1;
-	margin-bottom: 5px;
 }
 
 /* RIGHT SIDE
 -------------------------------------------------- */
 .btn-default {
 	margin-top:5px;
-}
-#inputBelowHeader {
-	margin-top: 7.5px;
 }
