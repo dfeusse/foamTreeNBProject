@@ -1,5 +1,4 @@
 main.controller('CallApiController', function($scope, CallApiService) {
-	console.log('calling Controller yea yeah')
 
 	$scope.callApi = function () {
         //var type = $scope.mediaType;
@@ -7,7 +6,7 @@ main.controller('CallApiController', function($scope, CallApiService) {
         //MediaService.get({term:$scope.searchTerm,entity:type},function(response){
         CallApiService.get({action:$scope.searchTerm},function(response){
             //$scope.pics = response.items;
-            console.log('$$$$$$$$$$$$$$$')
+            console.log('Http response:')
             console.log(response)
         });
     }

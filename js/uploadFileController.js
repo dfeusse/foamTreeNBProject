@@ -27,11 +27,11 @@ main.controller('UploadFileController', function($scope, $timeout, CallApiServic
             var fileContentObject = JSON.parse(fileContentString)
             $scope.data = fileContentObject;
 
-            console.log('read result: ')
+            console.log('reading file. result: ')
             console.log(read.result);
             newData = read.result;
-            console.log('var var')
-            console.log(newData)
+            //console.log('var var')
+            //console.log(newData)
 
             document.getElementById('dataResult').innerHTML = "";
             document.getElementById('dataResult').innerHTML = newData;
@@ -136,8 +136,8 @@ main.controller('UploadFileController', function($scope, $timeout, CallApiServic
             // Used this because of an error
             // solution: https://docs.angularjs.org/error/$rootScope/inprog?p0=$digest
             $timeout(function() {
-                console.log('$$$$$$$$$$$$$$$')
-                //console.log(response)
+                console.log('Http response:')
+                console.log(response)
                 $scope.yay = response;
                 foamtree.set({
                     dataObject: { groups: $scope.yay.groups },
@@ -168,11 +168,11 @@ main.controller('UploadFileController', function($scope, $timeout, CallApiServic
 
                     CallSecondLayerApiService.get({clickterm:clusterTermClicked},function(response){
                         $timeout(function() {
-                            console.log('$$$$$$$$$$$$$$$')
+                            console.log('Http response:')
                             console.log(response)
 
-                            console.log('********')
-                            console.log(group)
+                            //console.log('********')
+                            //console.log(group)
                             
                             group.groups = response.groups.slice(0,20);
                             
@@ -184,7 +184,7 @@ main.controller('UploadFileController', function($scope, $timeout, CallApiServic
                                 console.log('first conditional')
                                 
                                 foamtree.open({ groups: group, open: true}).then(function(){
-                                    console.log('PONED FIRST')
+                                    console.log('foam tree opened')
                                     //console.log(staticData.groups)
                                 })
                                 
@@ -193,7 +193,7 @@ main.controller('UploadFileController', function($scope, $timeout, CallApiServic
                                 console.log('second conditional')
                                 
                                 foamtree.open({ groups: group, open: true}).then(function(){
-                                    console.log('PONED SECOND')
+                                    console.log('foam tree opened')
                                     //console.log(staticData.groups)
                                 })
                                 
@@ -261,11 +261,11 @@ main.controller('UploadFileController', function($scope, $timeout, CallApiServic
 
                     CallSecondLayerApiService.get({clickterm:clusterTermClicked},function(response){
                         $timeout(function() {
-                            console.log('$$$$$$$$$$$$$$$')
+                            console.log('Http response')
                             console.log(response)
 
-                            console.log('********')
-                            console.log(group)
+                            //console.log('********')
+                            //console.log(group)
                             
                             group.groups = response.groups.slice(0,20);
                             
@@ -291,7 +291,7 @@ main.controller('UploadFileController', function($scope, $timeout, CallApiServic
                                 })
 
                                 if(group.groups.length==0){
-                                    console.log('NO data, array is empty, SHOULD NOT load')
+                                    console.log('NO data, array is empty, THIS SHOULD NOT LOAD!!')
                                 }
                                 
                             } //*/
@@ -341,8 +341,8 @@ main.controller('UploadFileController', function($scope, $timeout, CallApiServic
         CallApiService.get({action:$scope.selectedSearchTopic},function(response){
             console.log('Button Clicked')
             $timeout(function() {
-                console.log('!!!!!!!')
-                //console.log(response)
+                console.log('Http response')
+                console.log(response)
                 $scope.poning = response;
                 foamtree.set({
                     dataObject: { groups: $scope.poning.groups },
